@@ -58,9 +58,9 @@ public:
         cv::createTrackbar("R", window_, NULL, 255);
         cv::createTrackbar("G", window_, NULL, 255);
         cv::createTrackbar("B", window_, NULL, 255);
-        cv::setTrackbarPos("R", window_, 255);
+        cv::setTrackbarPos("R", window_, 0);
         cv::setTrackbarPos("G", window_, 255);
-        cv::setTrackbarPos("B", window_, 255);
+        cv::setTrackbarPos("B", window_, 0);
         //cv::setMouseCallback(window_, &leap_painter::on_mouse_impl, this);
 
         for (;;) {
@@ -80,8 +80,8 @@ public:
 
     /*
      * Those `pending` flags are meant to prevent multithread-related bugs.
-     * The HighGUI GTK backend doesn't support multithread GUI opeartions.
-     * We just show the updated image on the main thread when a pending are available.
+     * The HighGUI GTK backend doesn't support multithreaded GUI opeartions.
+     * We just show the updated image on the main thread when a pending is available.
      */
     void show_image()
     {
@@ -96,7 +96,7 @@ public:
 
     /*
      * The leapmotion callback thread doesn't seem to be changed or does but not quite often.
-     * We don't lock for now for performance reasons
+     * Lock for now just in case.
      */
     void draw_line(cv::Point const& p1, cv::Point const& p2)
     {
@@ -116,7 +116,8 @@ public:
         std::lock_guard<std::mutex> lock(mtx_);
 
         pointer_buf_ = image_.clone();
-        cv::circle(pointer_buf_, point, 5, cv::Scalar(0xff, 0xff, 0xff));
+        //cv::circle(pointer_buf_, point, 5, cv::Scalar(0x00, 0x99, 0x00));
+        cv::drawMarker(pointer_buf_, point, cv::Scalar(0x00, 0x99, 0x00), cv::MarkerTypes::MARKER_CROSS, 10, 3, cv::LineTypes::LINE_8);
         pointer_pending_ = true;
     }
 
@@ -168,7 +169,7 @@ private:
     }
 };
 
-std::shared_ptr<leap_painter> painter;
+std::unique_ptr<leap_painter> painter;
 
 void leap_painter_listener::onConnect(const Leap::Controller& controller)
 {
@@ -231,7 +232,7 @@ int main(int argc, char **argv)
             return 1;
         }
 
-        painter = std::make_shared<leap_painter>(argv[1]);
+        painter = std::make_unique<leap_painter>(argv[1]);
         painter->run(argv[2]);
     } catch (std::exception& e) {
         std::cerr << "[!] Exception: " << e.what() << std::endl;
