@@ -1,7 +1,7 @@
 TARGET   = leap-painter
 OBJS	 = src/painter.o
 LIBS     = opencv libleap
-CXXFLAGS += -O2 -Wall -Wextra -std=c++17 $(shell pkg-config --cflags $(LIBS))
+CXXFLAGS += -O3 -mtune=native -march=native -mfpmath=both -Wall -Wextra -std=c++17 $(shell pkg-config --cflags $(LIBS))
 LDFLAGS  += $(shell pkg-config --libs $(LIBS))
 
 all: $(TARGET)

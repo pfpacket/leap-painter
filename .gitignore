@@ -31,3 +31,9 @@
 *.out
 *.app
 leap-painter
+
+# Photos
+*.jpg
+*.jpeg
+*.png
+*.bmp
