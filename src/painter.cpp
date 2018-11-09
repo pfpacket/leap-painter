@@ -92,7 +92,7 @@ public:
             else if (key == 'v')
                 enable_camera(3);
             else if (key == save_key) {
-                if (cv::imwrite(file, image_, {cv::IMWRITE_JPEG_QUALITY, 100}))
+                if (cv::imwrite(file, back_buffer_, {cv::IMWRITE_JPEG_QUALITY, 100}))
                     std::cout << "[!] Current image saved: " << file << std::endl;
             }
         }
