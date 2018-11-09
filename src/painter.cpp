@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <vector>
 #include <memory>
@@ -90,7 +89,7 @@ public:
             if (key == exit_key)
                 break;
             else if (key == 'v')
-                enable_camera(3);
+                enable_camera(0);
             else if (key == save_key) {
                 if (cv::imwrite(file, back_buffer_, {cv::IMWRITE_JPEG_QUALITY, 100}))
                     std::cout << "[!] Current image saved: " << file << std::endl;
